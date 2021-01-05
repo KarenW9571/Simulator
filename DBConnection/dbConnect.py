@@ -3,7 +3,8 @@ import urllib
 
 
 def dbConnect():
-    mongo_uri = "mongodb+srv://karen:Rachel.95@1cluster0.6xfbw.mongodb.net/?retryWrites=true&w=majority"
+    mongo_uri = "mongodb+srv://karen:Rachel.95@cluster0.6xfbw.mongodb.net/test?retryWrites=true&w=majority"
+
     client = pymongo.MongoClient(mongo_uri)
 
     return client

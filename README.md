@@ -10,3 +10,5 @@ Using the following to create a python similar environment
 
 **>> pip install -r requirements.txt**
 
+Data is stored in MongoDB database or some other timeseries database.
+

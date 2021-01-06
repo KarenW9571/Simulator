@@ -23,10 +23,6 @@ def adjustClosePrice(tickerList, start="2019-10-18", end="2020-12-31"):
                           left_index=True, right_index=True)
     return df.round(2)
 
-
-<<<<<<< HEAD
+    
 stock = yf.download(tickers[0], start="2019-10-18", end="2020-12-31")
 print(stock.head(5))
-=======
-print(tickers)
->>>>>>> c4f45605efc3da405d457bdb49bce9507a2979bb

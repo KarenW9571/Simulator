@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 import pickle
+import json
 
 
 '''
@@ -23,6 +24,17 @@ def adjustClosePrice(tickerList, start="2019-10-18", end="2020-12-31"):
                           left_index=True, right_index=True)
     return df.round(2)
 
-    
+
+def initialDataLoad(tickerList, start="2019-10-18", end="2020-12-31"):
+    output = {}
+    for ticker in tickerList:
+        data = yf.download(ticker, start, end)
+        dataJs = data.to_json(orient="index")
+        temp = {"Stock": ticker, "Price": dataJs}
+        # need change to generate entire json
+        output = json.dumps(temp)
+        return output
+
+
 stock = yf.download(tickers[0], start="2019-10-18", end="2020-12-31")
 print(stock.head(5))

@@ -1,3 +1,2 @@
 from DBConnection.dbConnect import dbConnect
-
-client = dbConnect()
+from dataCollect.retrieveSP500 import .

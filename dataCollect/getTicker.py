@@ -5,7 +5,8 @@ import requests  # can grab the saurce code from Wikipedia's page
 
 
 def save_sp500_tickers():
-    resp = requests.get('http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
+    resp = requests.get(
+        'http://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
     soup = bs.BeautifulSoup(resp.text, 'lxml')
     table = soup.find('table', {'class': 'wikitable sortable'})
     tickers = []
@@ -17,5 +18,6 @@ def save_sp500_tickers():
         pickle.dump(tickers, f)
 
     return tickers
+
 
 save_sp500_tickers()

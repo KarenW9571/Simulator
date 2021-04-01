@@ -1,10 +1,12 @@
-import pymongo
-import urllib
+import mysql.connector
+import json
 
 
-def dbConnect():
-    mongo_uri = "mongodb+srv://karen:Rachel.95@cluster0.6xfbw.mongodb.net/test?retryWrites=true&w=majority"
+class database():
 
-    client = pymongo.MongoClient(mongo_uri)
+    def dbConnect(self):
+        f = open('Config.json')
+        config = json.load(f)
+        client = mysql.connector.connect(**config)
 
-    return client
+        return client

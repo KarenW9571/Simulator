@@ -1,15 +1,17 @@
-from DBConnection.dbConnect import database
+from . import dbConnect
 import yfinance as yf
 import pandas as pd
 import pickle
 import json
+from datetime import datetime, timedelta
+
 
 
 '''
     For now, we only consider the stock prices, we could addin supplimentary information later.
 '''
-with open("dataCollect/sp500tickers.pickle", "rb") as f:
-    tickers = pickle.load(f)
+#with open("sp500tickers.pickle", "rb") as f:
+#    tickers = pickle.load(f)
 # This function is used to process the close price of the stock
 
 
@@ -27,18 +29,32 @@ def adjustClosePrice(tickerList, start="2019-10-18", end="2020-12-31"):
 
 
 def initialDataLoad(tickerList, start="2015-01-01", end="2020-12-31"):
-
+    
     for ticker in tickerList:
-        data = yf.download(ticker, start, end)
-        data.rename(columns={"Open": "openPrice",
-                             "Close": "closePrice",
+        
+        app = yf.download(ticker, start, end)
+        app.reset_index(inplace=True)
+        app = app.rename(columns={"Open": "openPrice",
+                             "Close": "openPrice",
                              "High": "highPrice",
                              "Low": "lowPrice",
-                             "Volumn": "volumn"
+                             "Volume": "volume",
+                             "Date": "date",
+                             "Adj Close": "adjustedClose"
                              })
-        db = database()
-        db.insertData('stockPrice', data)
-        db.disconnect()
+        app['ticker'] = ticker
+        db = dbConnect.database()
+        db.insertData(tableName = 'stockPrice', dataFrame = app)
+    
+    db.disconnect()
+
+def weeklyInjection(tickerList): 
+    today = datetime.today().date()
+    start = str(today - timedelta(7))
+    end = str(today)
+    
+    initialDataLoad(tickerList, start=start, end=end)
+
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ def initialDataLoad(tickerList, start="2015-01-01", end="2020-12-31"):
         app = yf.download(ticker, start, end)
         app.reset_index(inplace=True)
         app = app.rename(columns={"Open": "openPrice",
-                             "Close": "openPrice",
+                             "Close": "closePrice",
                              "High": "highPrice",
                              "Low": "lowPrice",
                              "Volume": "volume",
@@ -46,7 +46,6 @@ def initialDataLoad(tickerList, start="2015-01-01", end="2020-12-31"):
         db = dbConnect.database()
         db.insertData(tableName = 'stockPrice', dataFrame = app)
     
-    db.disconnect()
 
 def weeklyInjection(tickerList): 
     today = datetime.today().date()

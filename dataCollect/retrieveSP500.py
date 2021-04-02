@@ -1,14 +1,17 @@
+from . import dbConnect
 import yfinance as yf
 import pandas as pd
 import pickle
 import json
+from datetime import datetime, timedelta
+
 
 
 '''
     For now, we only consider the stock prices, we could addin supplimentary information later.
 '''
-with open("sp500tickers.pickle", "rb") as f:
-    tickers = pickle.load(f)
+#with open("sp500tickers.pickle", "rb") as f:
+#    tickers = pickle.load(f)
 # This function is used to process the close price of the stock
 
 
@@ -25,16 +28,36 @@ def adjustClosePrice(tickerList, start="2019-10-18", end="2020-12-31"):
     return df.round(2)
 
 
-def initialDataLoad(tickerList, start="2019-10-18", end="2020-12-31"):
-    output = {}
+def initialDataLoad(tickerList, start="2015-01-01", end="2020-12-31"):
+    
     for ticker in tickerList:
-        data = yf.download(ticker, start, end)
-        dataJs = data.to_json(orient="index")
-        temp = {"Stock": ticker, "Price": dataJs}
-        # need change to generate entire json
-        output = json.dumps(temp)
-        return output
+        
+        app = yf.download(ticker, start, end)
+        app.reset_index(inplace=True)
+        app = app.rename(columns={"Open": "openPrice",
+                             "Close": "closePrice",
+                             "High": "highPrice",
+                             "Low": "lowPrice",
+                             "Volume": "volume",
+                             "Date": "date",
+                             "Adj Close": "adjustedClose"
+                             })
+        app['ticker'] = ticker
+        db = dbConnect.database()
+        db.insertData(tableName = 'stockPrice', dataFrame = app)
+    
+
+def weeklyInjection(tickerList): 
+    today = datetime.today().date()
+    start = str(today - timedelta(7))
+    end = str(today)
+    
+    initialDataLoad(tickerList, start=start, end=end)
 
 
-stock = yf.download(tickers[0], start="2019-10-18", end="2020-12-31")
-print(stock.head(5))
+
+if __name__ == "__main__":
+
+    stock = yf.download(tickers[0], start="2019-10-18", end="2020-12-31")
+    print(stock.head(5))
+    initialDataLoad(tickers)

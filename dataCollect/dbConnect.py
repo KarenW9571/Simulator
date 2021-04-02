@@ -15,9 +15,9 @@ class database():
         df = pd.read_sql(query, self.con)
         return df
 
-    def insertData(self, tableName, dataFrame):
+    def insertData(self, tableName, dataFrame, if_exists='append'):
         try:
-            dataFrame.to_sql(name = tableName, con = self.con, if_exists='append',index= False)
+            dataFrame.to_sql(name = tableName, con = self.con, if_exists= if_exists ,index= False)
         except ValueError as vx:
             print(vx)
         except Exception as ex:

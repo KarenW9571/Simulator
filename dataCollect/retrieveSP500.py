@@ -10,9 +10,8 @@ from datetime import datetime, timedelta
 '''
     For now, we only consider the stock prices, we could addin supplimentary information later.
 '''
-#with open("sp500tickers.pickle", "rb") as f:
-#    tickers = pickle.load(f)
-# This function is used to process the close price of the stock
+
+
 
 
 def adjustClosePrice(tickerList, start="2019-10-18", end="2020-12-31"):
@@ -28,7 +27,7 @@ def adjustClosePrice(tickerList, start="2019-10-18", end="2020-12-31"):
     return df.round(2)
 
 
-def initialDataLoad(tickerList, start="2015-01-01", end="2020-12-31"):
+def initialDataLoad(tickerList, start="2021-01-01", end="2021-04-02"):
     
     for ticker in tickerList:
         

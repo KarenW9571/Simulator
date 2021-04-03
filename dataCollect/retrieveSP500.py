@@ -53,6 +53,29 @@ def weeklyInjection(tickerList):
     
     initialDataLoad(tickerList, start=start, end=end)
 
+def additionalDataLoad(ticker, start="2015-01-01", end= datetime.today().date()):  
+    app = yf.download(ticker, start, end)
+    app.reset_index(inplace=True)
+    app = app.rename(columns={"Open": "openPrice",
+                            "Close": "closePrice",
+                            "High": "highPrice",
+                            "Low": "lowPrice",
+                            "Volume": "volume",
+                            "Date": "date",
+                            "Adj Close": "adjustedClose"
+                            })
+    app['ticker'] = ticker
+    db = dbConnect.database()
+    db.insertData(tableName = 'stockPrice', dataFrame = app)
+    print('%s added to stockPrice table' % (ticker))
+    
+    ls = []
+    ls.append(ticker)
+    d = {'ticker': ls}
+    tik = pd.DataFrame(d)
+    db.insertData(tableName = 'stockName', dataFrame = tik)
+    print('%s added to stockName table' % (ticker))
+
 
 
 if __name__ == "__main__":
